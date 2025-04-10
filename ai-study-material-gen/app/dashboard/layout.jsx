@@ -1,6 +1,6 @@
 import React from 'react'
 import SideBar from './_components/SideBar'
-import DashBoardHeader from './_components/DashBoardHeader'
+import DashBoardHeader from './_components/DashboardHeader'
 
 const DashboardLayout = ({children}) => {
   return (
