@@ -1,105 +1,125 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import DOMPurify from "dompurify";
+import { marked } from "marked";
 
 function ViewNotes() {
     const { courseId } = useParams();
+    const router = useRouter();
+
     const [notes, setNotes] = useState([]);
-    const [chapterIndex, setChapterIndex] = useState(0);
+    const [currentChapter, setCurrentChapter] = useState(0);
 
     useEffect(() => {
-        GetNotes();
+        fetchNotes();
     }, []);
 
-    const GetNotes = async () => {
+    const fetchNotes = async () => {
         try {
-            const result = await axios.post("/api/study-type", {
-                courseId: courseId,
+            const response = await axios.post("/api/study-type", {
+                courseId,
                 studyType: "notes",
             });
-            console.log(result?.data);
-            
-            // Ensure proper formatting
-            const parsedNotes = Array.isArray(result?.data) ? result.data : [];
-            setNotes(parsedNotes);
+            setNotes(Array.isArray(response?.data) ? response.data : []);
         } catch (error) {
             console.error("Error fetching notes:", error);
         }
     };
 
-    const nextChapter = () => {
-        if (chapterIndex < notes.length - 1) {
-            setChapterIndex(chapterIndex + 1);
+    const handleNextChapter = () => {
+        if (currentChapter < notes.length - 1) {
+            setCurrentChapter((prev) => prev + 1);
         }
     };
 
-    const prevChapter = () => {
-        if (chapterIndex > 0) {
-            setChapterIndex(chapterIndex - 1);
+    const handlePrevChapter = () => {
+        if (currentChapter > 0) {
+            setCurrentChapter((prev) => prev - 1);
         }
+    };
+
+    const goBackToCourse = () => {
+        router.push(`/course/${courseId}`);
     };
 
     return notes.length > 0 ? (
-        <div className="px-4">
-            {/* Progress Bar */}
-            <div className="flex gap-5 items-center mt-8">
-                {chapterIndex > 0 && (
-                    <Button variant="outline" size="sm" onClick={prevChapter}>
-                        Previous
+        <div className="px-6 py-8 max-w-4xl mx-auto">
+            {/* Navigation */}
+            <div className="flex items-center justify-between gap-4 mb-6">
+                {currentChapter > 0 ? (
+                    <Button variant="secondary" onClick={handlePrevChapter}>
+                        ← Previous
+                    </Button>
+                ) : (
+                    <Button variant="ghost" onClick={goBackToCourse}>
+                        ← Back to Course
                     </Button>
                 )}
-                {notes.map((_, index) => (
-                    <div key={index} className={`w-full h-2 rounded-full ${index <= chapterIndex ? 'bg-primary' : 'bg-gray-200'}`} />
-                ))}
-                {chapterIndex < notes.length - 1 && (
-                    <Button variant="outline" size="sm" onClick={nextChapter}>
-                        Next
+
+                <div className="flex-1 flex gap-2 mx-4">
+                    {notes.map((_, index) => (
+                        <div
+                            key={index}
+                            className={`h-2 flex-1 rounded-full transition-colors ${
+                                index <= currentChapter ? "bg-primary" : "bg-gray-200"
+                            }`}
+                        />
+                    ))}
+                </div>
+
+                {currentChapter < notes.length - 1 && (
+                    <Button variant="secondary" onClick={handleNextChapter}>
+                        Next →
                     </Button>
                 )}
             </div>
 
             {/* Notes Content */}
-            <div className="mt-10 p-5 border border-gray-300 rounded-lg shadow-md bg-white">
-                <h2 className="text-xl font-semibold mb-3">
-                    Chapter {chapterIndex + 1}: {notes[chapterIndex]?.chapter_title || "Untitled"}
-                </h2>
-
-                {/* Render chapter summary */}
-                {notes[chapterIndex]?.chapter_summary && (
-                    <p className="text-gray-600 mb-4">{notes[chapterIndex].chapter_summary}</p>
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+                {notes[currentChapter]?.chapter_title && (
+                    <h2 className="text-2xl font-bold mb-3 text-primary">
+                        Chapter {currentChapter + 1}: {notes[currentChapter].chapter_title}
+                    </h2>
                 )}
 
-                {/* Render topic list */}
-                {notes[chapterIndex]?.topics && notes[chapterIndex]?.topics.length > 0 && (
-                    <ul className="list-disc list-inside mt-3 text-gray-700">
-                        {notes[chapterIndex].topics.map((topic, index) => (
-                            <li key={index}>{topic}</li>
-                        ))}
-                    </ul>
+                {notes[currentChapter]?.chapter_summary && (
+                    <p className="text-gray-600 mb-5 leading-relaxed">
+                        {notes[currentChapter].chapter_summary}
+                    </p>
                 )}
 
-                {/* Render the actual notes (HTML content) */}
-                {notes[chapterIndex]?.notes && (
-                    <div className="mt-4 border-t pt-3">
-                        <div
-                            className="prose max-w-none"
-                            dangerouslySetInnerHTML={{
-                                __html: notes[chapterIndex].notes.replace(/```html/g, ""),
-                            }}
-                        />
+                {notes[currentChapter]?.topics?.length > 0 && (
+                    <div className="mb-4">
+                        <h3 className="font-semibold text-gray-700 mb-2">Topics Covered:</h3>
+                        <ul className="list-disc list-inside text-gray-800 space-y-1">
+                            {notes[currentChapter].topics.map((topic, index) => (
+                                <li key={index}>{topic}</li>
+                            ))}
+                        </ul>
                     </div>
                 )}
 
-                {/* If no content, show a message */}
-                {!notes[chapterIndex]?.notes && (
-                    <p className="text-gray-500">No content available for this chapter.</p>
+                {notes[currentChapter]?.notes ? (
+                    <div className="mt-6 pt-4 border-t">
+                        <div
+                            className="prose max-w-none prose-blue"
+                            dangerouslySetInnerHTML={{
+                                __html: DOMPurify.sanitize(
+                                    marked.parse(notes[currentChapter].notes)
+                                ),
+                            }}
+                        />
+                    </div>
+                ) : (
+                    <p className="text-gray-500 italic">No content available for this chapter.</p>
                 )}
             </div>
         </div>
     ) : (
-        <p className="text-gray-500 text-center mt-10">Loading notes...</p>
+        <p className="text-center text-gray-500 mt-20 text-lg">Loading notes...</p>
     );
 }
 

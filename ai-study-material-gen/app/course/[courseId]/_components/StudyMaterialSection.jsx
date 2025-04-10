@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import MaterialCardItem from './MaterialCardItem';
 
-const StudyMaterialSection = ({ courseId }) => {
+const StudyMaterialSection = ({ courseId, course }) => {
   const [studyTypeContent, setStudyTypeContent] = useState();
 
   const MaterialList = [
@@ -59,17 +60,16 @@ const StudyMaterialSection = ({ courseId }) => {
         Choose your preferred method to learn effectively.
       </p>
 
-      {/* Grid Layout with Uniform Cards */}
+      {/* Grid Layout with MaterialCardItem for each item */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-5">
         {MaterialList.map((item, index) => (
-          <Link key={index} href={`/course/${courseId}${item.path}`}>
-            <div className="transition-all border p-5 rounded-xl shadow-md hover:shadow-lg bg-white 
-                            flex flex-col items-center text-center cursor-pointer h-48">
-              <img src={item.icon} alt={item.name} className="w-16 h-16" />
-              <h3 className="text-lg font-semibold text-gray-800 mt-3">{item.name}</h3>
-              <p className="text-sm text-gray-600 line-clamp-2">{item.desc}</p>
-            </div>
-          </Link>
+          <MaterialCardItem 
+            key={index} 
+            item={item} 
+            studyTypeContent={studyTypeContent} 
+            course={course}
+            refreshData={GetStudyMaterial}
+          />
         ))}
       </div>
     </div>

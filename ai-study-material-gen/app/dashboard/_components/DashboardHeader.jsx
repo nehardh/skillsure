@@ -1,3 +1,4 @@
+"use client"
 import { UserButton } from '@clerk/nextjs';
 import React from 'react';
 import Image from 'next/image';
@@ -18,13 +19,7 @@ const DashboardHeader = () => {
 
       {/* User Button */}
       <div className="flex items-center gap-3">
-        <UserButton 
-          appearance={{
-            elements: {
-              userButton: 'rounded-full bg-blue-500 hover:bg-blue-600 text-white p-2 transition',
-            },
-          }} 
-        />
+        <UserButton />
       </div>
     </div>
   );

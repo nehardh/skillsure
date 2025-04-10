@@ -39,7 +39,7 @@ const SideBar = () => {
             <div className="mt-10">
                 <Link href={"/create"}>
                     <Button className="w-full bg-blue-500 text-white hover:bg-blue-600 transition-all">
-                        + Create New
+                        Create New
                     </Button>
                 </Link>
             </div>
