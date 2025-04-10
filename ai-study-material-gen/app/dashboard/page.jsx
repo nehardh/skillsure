@@ -1,5 +1,5 @@
 import React from 'react'
-import Welcomebanner from './_components/Welcomebanner'
+import Welcomebanner from './_components/WelcomeBanner'
 import CourseList from './_components/CourseList'
 
 const Dashboard = () => {
