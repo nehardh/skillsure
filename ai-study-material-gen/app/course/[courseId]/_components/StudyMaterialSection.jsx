@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Link from "next/link";
-import MaterialCardItem from './MaterialCardItem';
+import MaterialCardItem from "./MaterialCardItem";
 
 const StudyMaterialSection = ({ courseId, course }) => {
   const [studyTypeContent, setStudyTypeContent] = useState();
@@ -54,25 +53,28 @@ const StudyMaterialSection = ({ courseId, course }) => {
   };
 
   return (
-    <div className="mt-8">
-      <h2 className="font-semibold text-2xl text-gray-900">📚 Study Material</h2>
-      <p className="text-gray-600 text-sm mt-1">
-        Choose your preferred method to learn effectively.
-      </p>
+    <section className="mt-10">
+      <div className="mb-4">
+        <h2 className="text-3xl font-bold text-gray-900 tracking-tight">
+          📚 Study Material
+        </h2>
+        <p className="mt-1 text-sm text-gray-600">
+          Choose your preferred method to learn effectively.
+        </p>
+      </div>
 
-      {/* Grid Layout with MaterialCardItem for each item */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {MaterialList.map((item, index) => (
-          <MaterialCardItem 
-            key={index} 
-            item={item} 
-            studyTypeContent={studyTypeContent} 
+          <MaterialCardItem
+            key={index}
+            item={item}
+            studyTypeContent={studyTypeContent}
             course={course}
             refreshData={GetStudyMaterial}
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

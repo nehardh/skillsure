@@ -36,9 +36,9 @@ const CourseCardItem = ({ course }) => {
       </div>
 
       {/* Fixed Progress Bar at the Bottom */}
-      <div className="mt-auto">
+      {/* <div className="mt-auto">
         <Progress value={10} />
-      </div>
+      </div> */}
     </div>
   );
 };

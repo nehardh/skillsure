@@ -10,35 +10,38 @@ import {
 
 const TopicInput = ({ setTopic, setDifficultyLevel }) => {
   return (
-    <div className="mt-10 flex flex-col items-center text-black">
-      {/* Wrapper for Consistent Width */}
-      <div className="max-w-lg w-full space-y-6">
-        {/* Topic Input Section */}
-        <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300">
-          <h2 className="text-lg font-semibold text-gray-800">Enter the topic or paste the prompt to generate</h2>
+    <div className=" flex flex-col items-center text-black">
+      <div className="w-full max-w-xl space-y-8">
+        {/* Topic Input Box */}
+        <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow">
+          <label className="block text-lg font-semibold text-gray-800 mb-3">
+            Topic or Prompt
+          </label>
           <Textarea
             aria-label="Topic input"
-            className="w-full p-4 mt-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
-            placeholder="Enter topic or paste the prompt..."
-            onChange={(event) => setTopic(event.target.value)}
+            placeholder="E.g. Introduction to Machine Learning..."
+            className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
+            onChange={(e) => setTopic(e.target.value)}
           />
         </div>
 
-        {/* Difficulty Level Section */}
-        <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300">
-          <h2 className="text-lg font-semibold text-gray-800">Select the difficulty level</h2>
+        {/* Difficulty Selector */}
+        <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow">
+          <label className="block text-lg font-semibold text-gray-800 mb-3">
+            Difficulty Level
+          </label>
           <Select onValueChange={(value) => setDifficultyLevel(value)}>
-            <SelectTrigger className="w-full border border-gray-300 rounded-lg p-4 mt-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none">
+            <SelectTrigger className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none">
               <SelectValue placeholder="Select difficulty" />
             </SelectTrigger>
-            <SelectContent className="w-full bg-white shadow-md rounded-xl border border-gray-300">
-              <SelectItem value="easy" className="p-4 hover:bg-blue-50 transition duration-200">
+            <SelectContent className="bg-white shadow-lg border border-gray-200 rounded-xl">
+              <SelectItem value="easy" className="p-3 hover:bg-blue-50 cursor-pointer rounded-md">
                 Easy
               </SelectItem>
-              <SelectItem value="moderate" className="p-4 hover:bg-blue-50 transition duration-200">
+              <SelectItem value="moderate" className="p-3 hover:bg-blue-50 cursor-pointer rounded-md">
                 Moderate
               </SelectItem>
-              <SelectItem value="complex" className="p-4 hover:bg-blue-50 transition duration-200">
+              <SelectItem value="complex" className="p-3 hover:bg-blue-50 cursor-pointer rounded-md">
                 Complex
               </SelectItem>
             </SelectContent>
