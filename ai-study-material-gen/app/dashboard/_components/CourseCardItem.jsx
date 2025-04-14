@@ -1,44 +1,48 @@
 import React from 'react';
 import Image from 'next/image';
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import { RefreshCcw } from 'lucide-react';
 import Link from 'next/link';
 
 const CourseCardItem = ({ course }) => {
+  // Optional: format date if available
+  const creationDate = course?.createdAt
+    ? new Date(course.createdAt).toLocaleDateString("en-GB", {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      })
+    : "27-Mar-25"; // fallback
+
   return (
-    <div className="border rounded-lg shadow-md p-5 flex flex-col h-full bg-gradient-to-br from-blue-50 to-gray-100">
-      <div className="flex-grow">
-        <div className="flex justify-between items-center">
-          <Image 
-            src={'/knowledge.png'}
-            alt="other"
-            width={50}
-            height={50}
-          />
-          <div className="mt-3 flex justify-end">
-            {course?.status === 'Generating' ? (
-              <h2 className="text-sm p-1 px-2 rounded-full bg-gray-500 text-white flex gap-2 items-center">
-                <RefreshCcw className="h-5 w-5"/>Generating...
-              </h2>
-            ) : (
-              <Link href={'/course/'+course?.courseId}>
-                <Button className="bg-blue-500 hover:bg-gray-400">View</Button>
-              </Link>
-            )}
-          </div>
-        </div>
-        <h2 className="mt-3 font-medium text-lg">{course?.courseLayout?.course_title}</h2>
-        <p className="text-sm text-gray-500 line-clamp-3 mt-2">{course?.courseLayout?.course_summary}</p>
-        
-        {/* Hardcoded Creation Date */}
-        <p className="text-xs text-gray-400 mt-2 mb-2">Created on: 27-March-25</p>
+    <div className="border rounded-xl shadow-sm p-5 flex flex-col h-full bg-gradient-to-br from-blue-50 to-gray-50 hover:shadow-md transition-shadow">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-4">
+        <Image src="/knowledge.png" alt="icon" width={48} height={48} />
+        {course?.status === 'Generating' ? (
+          <span className="text-xs px-2 py-1 rounded-full bg-gray-600 text-white flex items-center gap-1">
+            <RefreshCcw className="h-4 w-4 animate-spin" />
+            Generating...
+          </span>
+        ) : (
+          <Link href={`/course/${course?.courseId}`}>
+            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
+              View
+            </Button>
+          </Link>
+        )}
       </div>
 
-      {/* Fixed Progress Bar at the Bottom */}
-      {/* <div className="mt-auto">
-        <Progress value={10} />
-      </div> */}
+      {/* Title & Summary */}
+      <h2 className="font-semibold text-lg text-gray-800">
+        {course?.courseLayout?.course_title || "Untitled"}
+      </h2>
+      <p className="text-sm text-gray-600 mt-1 line-clamp-3">
+        {course?.courseLayout?.course_summary || "No summary provided."}
+      </p>
+
+      {/* Creation Date */}
+      <p className="text-xs text-gray-400 mt-4">Created on: {creationDate}</p>
     </div>
   );
 };

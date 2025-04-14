@@ -4,9 +4,9 @@ import { Progress } from "@/components/ui/progress";
 
 const CourseIntroCard = ({ course }) => {
   return (
-    <div className="flex gap-6 items-center p-6 border rounded-2xl shadow-lg bg-white transition hover:shadow-xl">
+    <div className="flex flex-col md:flex-row gap-6 items-center p-6 border rounded-2xl shadow-lg bg-white transition hover:shadow-xl">
       {/* Course Thumbnail */}
-      <div className="relative w-20 h-20 flex-shrink-0">
+      <div className="relative w-20 h-20 flex-shrink-0 mb-4 md:mb-0">
         <Image
           src={"/knowledge.png"}
           alt="Course Thumbnail"

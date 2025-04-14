@@ -4,6 +4,8 @@ import MaterialCardItem from "./MaterialCardItem";
 
 const StudyMaterialSection = ({ courseId, course }) => {
   const [studyTypeContent, setStudyTypeContent] = useState();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const MaterialList = [
     {
@@ -41,6 +43,8 @@ const StudyMaterialSection = ({ courseId, course }) => {
   }, []);
 
   const GetStudyMaterial = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const result = await axios.post("/api/study-type", {
         courseId: courseId,
@@ -48,7 +52,10 @@ const StudyMaterialSection = ({ courseId, course }) => {
       });
       setStudyTypeContent(result.data);
     } catch (error) {
+      setError("Failed to fetch study materials.");
       console.error("Error fetching study materials:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,17 +70,30 @@ const StudyMaterialSection = ({ courseId, course }) => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {MaterialList.map((item, index) => (
-          <MaterialCardItem
-            key={index}
-            item={item}
-            studyTypeContent={studyTypeContent}
-            course={course}
-            refreshData={GetStudyMaterial}
-          />
-        ))}
-      </div>
+      {loading && (
+        <div className="text-center py-6">
+          <span className="text-xl text-gray-500">Loading...</span>
+        </div>
+      )}
+      {error && (
+        <div className="text-center py-6">
+          <span className="text-xl text-red-500">{error}</span>
+        </div>
+      )}
+
+      {!loading && !error && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {MaterialList.map((item, index) => (
+            <MaterialCardItem
+              key={index}
+              item={item}
+              studyTypeContent={studyTypeContent}
+              course={course}
+              refreshData={GetStudyMaterial}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 };

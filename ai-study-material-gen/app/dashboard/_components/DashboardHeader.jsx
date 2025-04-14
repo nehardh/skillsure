@@ -1,27 +1,27 @@
-"use client"
-import { UserButton } from '@clerk/nextjs';
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+"use client";
+import { UserButton } from "@clerk/nextjs";
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 const DashboardHeader = () => {
   return (
-    <div className="p-5 shadow-lg flex justify-between items-center bg-white border-b-2 border-gray-200 rounded-lg">
-      {/* Logo and Title */}
-      <Link href="/dashboard">
-        <div className="flex gap-2 items-center cursor-pointer transition-transform hover:scale-105">
-          <Image src="/logo.svg" alt="SkillSure Logo" width={30} height={30} priority={true} />
-          <h2 className="font-extrabold text-2xl text-gray-800 hover:text-blue-600 transition-colors">
-            SkillSure
-          </h2>
-        </div>
+    <header className="px-6 py-4 bg-white border-b border-gray-200 shadow-sm flex items-center justify-between">
+      {/* Logo */}
+      <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-90 transition">
+        <Image
+          src="/logo.svg"
+          alt="SkillSure Logo"
+          width={28}
+          height={28}
+          priority
+        />
+        <span className="text-xl font-semibold text-gray-800">SkillSure</span>
       </Link>
 
-      {/* User Button */}
-      <div className="flex items-center gap-3">
-        <UserButton />
-      </div>
-    </div>
+      {/* User Avatar */}
+      <UserButton afterSignOutUrl="/" />
+    </header>
   );
 };
 
