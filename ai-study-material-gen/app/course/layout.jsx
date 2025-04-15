@@ -5,7 +5,7 @@ function CourseViewLayout({ children }) {
   return (
     <div>
         <DashboardHeader/>
-        <div className="">
+        <div className="min-w-screen">
             {children}
         </div>
     </div>

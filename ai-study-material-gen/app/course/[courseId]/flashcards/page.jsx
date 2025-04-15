@@ -36,6 +36,7 @@ function Flashcards() {
         courseId,
         studyType: "Flashcard",
       });
+      console.log("API Result:", result.data.content); 
   
       const cards = result?.data?.content;
       const flashcardsArray = Array.isArray(cards?.flashcards) ? cards.flashcards : [];

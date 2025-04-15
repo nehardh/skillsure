@@ -1,11 +1,11 @@
-import { Geist_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import  Provider  from "./Provider";
+import Provider from "./Provider";
 import { Toaster } from "@/components/ui/sonner";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
 });
 
@@ -17,14 +17,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" className={jetbrainsMono.variable}>
         <head>
           <title>{metadata.title}</title>
           <meta name="description" content={metadata.description} />
         </head>
-        <body className={`${geistMono.variable} antialiased`}>
+        <body className="antialiased">
           <Provider>{children}</Provider>
-          <Toaster/>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
