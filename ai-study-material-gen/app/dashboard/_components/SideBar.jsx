@@ -24,12 +24,7 @@ const SideBar = () => {
         <h1 className="text-xl font-semibold text-blue-400">SkillSure</h1>
       </div>
 
-      {/* Create Button */}
-      <Link href="/create">
-        <Button className="w-full bg-blue-500 hover:bg-blue-600 mb-8">
-          Create New +
-        </Button>
-      </Link>
+
 
       {/* Menu */}
       <nav className="flex flex-col gap-2">

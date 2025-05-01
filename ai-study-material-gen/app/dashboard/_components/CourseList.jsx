@@ -5,6 +5,7 @@ import axios from "axios";
 import CourseCardItem from "./CourseCardItem";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
+import Link from "next/link";
 
 function CourseList() {
   const { user } = useUser();
@@ -30,38 +31,41 @@ function CourseList() {
   };
 
   return (
-    <section className="mt-8">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">
-          Your Study Material
-        </h2>
-        <Button
-          variant="outline"
-          className="gap-2 text-sm"
-          onClick={GetCourseList}
-          disabled={loading}
-        >
-          <RefreshCw className={`h-4 w-4 ${loading && "animate-spin"}`} />
-          Refresh
-        </Button>
+    <section className="mt-12 px-4 md:px-8 max-w-6xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
+          <h2 className="text-3xl font-semibold text-gray-800">📘 Your Courses</h2>
+          <p className="text-sm text-gray-500 mt-1">All your study material in one place.</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link href="/create">
+            <Button className="bg-blue-500 hover:bg-blue-600 text-white">Create New +</Button>
+          </Link>
+          <Button
+            variant="outline"
+            className="gap-2"
+            onClick={GetCourseList}
+            disabled={loading}
+          >
+            <RefreshCw className={`h-4 w-4 ${loading && "animate-spin"}`} />
+            Refresh
+          </Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {!loading ? (
-          courseList?.length > 0 ? (
-            courseList.map((course, index) => (
-              <CourseCardItem key={index} course={course} />
-            ))
-          ) : (
-            <p className="text-gray-500 col-span-full">No study materials found.</p>
-          )
-        ) : (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {loading ? (
           Array.from({ length: 6 }).map((_, index) => (
-            <div
-              key={index}
-              className="h-56 w-full bg-slate-200 rounded-lg animate-pulse"
-            />
+            <div key={index} className="h-52 bg-gray-200 rounded-lg animate-pulse" />
           ))
+        ) : courseList?.length > 0 ? (
+          courseList.map((course, index) => (
+            <CourseCardItem key={index} course={course} />
+          ))
+        ) : (
+          <div className="col-span-full text-center text-gray-500 py-10">
+            No study materials found.
+          </div>
         )}
       </div>
     </section>
