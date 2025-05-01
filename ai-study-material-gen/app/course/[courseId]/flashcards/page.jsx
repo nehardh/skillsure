@@ -39,7 +39,9 @@ function Flashcards() {
       console.log("API Result:", result.data.content); 
   
       const cards = result?.data?.content;
-      const flashcardsArray = Array.isArray(cards?.flashcards) ? cards.flashcards : [];
+      const flashcardsArray = Array.isArray(cards) ? cards : [];
+
+      console.log("Flashcards Array:", flashcardsArray);
   
       setFlashcards(flashcardsArray);
       setFlippedStates(new Array(flashcardsArray.length).fill(false));

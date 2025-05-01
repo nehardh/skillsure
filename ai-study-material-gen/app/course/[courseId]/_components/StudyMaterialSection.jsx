@@ -3,35 +3,35 @@ import axios from "axios";
 import MaterialCardItem from "./MaterialCardItem";
 
 const StudyMaterialSection = ({ courseId, course }) => {
-  const [studyTypeContent, setStudyTypeContent] = useState();
+  const [studyTypeContent, setStudyTypeContent] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const MaterialList = [
     {
-      name: "Notes/Chapters",
-      desc: "Read notes to prepare!",
+      name: "Notes",
+      desc: "Structured chapters to read.",
       icon: "/notes.png",
       path: "/notes",
       type: "notes",
     },
     {
-      name: "Flashcard",
-      desc: "Create flashcards to remember!",
+      name: "Flashcards",
+      desc: "Quick memory boosters.",
       icon: "/flashcard.png",
       path: "/flashcards",
       type: "FlashCard",
     },
     {
       name: "Quiz",
-      desc: "Test your knowledge!",
+      desc: "Test your knowledge.",
       icon: "/quiz.png",
       path: "/quiz",
       type: "Quiz",
     },
     {
       name: "QnA",
-      desc: "Ask questions and get answers!",
+      desc: "Get answers to your doubts.",
       icon: "/qa.png",
       path: "/qa",
       type: "Qa",
@@ -39,45 +39,44 @@ const StudyMaterialSection = ({ courseId, course }) => {
   ];
 
   useEffect(() => {
-    GetStudyMaterial();
-  }, []);
+    if (courseId) fetchStudyMaterial();
+  }, [courseId]);
 
-  const GetStudyMaterial = async () => {
+  const fetchStudyMaterial = async () => {
     setLoading(true);
     setError(null);
     try {
       const result = await axios.post("/api/study-type", {
-        courseId: courseId,
+        courseId,
         studyType: "ALL",
       });
-      setStudyTypeContent(result.data);
-    } catch (error) {
-      setError("Failed to fetch study materials.");
-      console.error("Error fetching study materials:", error);
+      setStudyTypeContent(result?.data || {});
+      console.log("Result: ",result?.data);
+    } catch (err) {
+      setError("Failed to fetch study materials. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="mt-10">
-      <div className="mb-4">
-        <h2 className="text-3xl font-bold text-gray-900 tracking-tight">
-          📚 Study Material
-        </h2>
-        <p className="mt-1 text-sm text-gray-600">
-          Choose your preferred method to learn effectively.
+    <section className="w-full max-w-6xl mx-auto mt-12 px-4 md:px-8">
+      <div className="text-center mb-10">
+        <h2 className="text-3xl font-semibold text-gray-800">📚 Study Material</h2>
+        <p className="text-gray-500 mt-2 text-sm">
+          Choose how you want to learn. Start exploring your options below.
         </p>
       </div>
 
       {loading && (
-        <div className="text-center py-6">
-          <span className="text-xl text-gray-500">Loading...</span>
+        <div className="flex justify-center py-10">
+          <span className="text-gray-500 text-lg">Loading...</span>
         </div>
       )}
+
       {error && (
-        <div className="text-center py-6">
-          <span className="text-xl text-red-500">{error}</span>
+        <div className="flex justify-center py-10">
+          <span className="text-red-500 text-lg">{error}</span>
         </div>
       )}
 
@@ -89,7 +88,7 @@ const StudyMaterialSection = ({ courseId, course }) => {
               item={item}
               studyTypeContent={studyTypeContent}
               course={course}
-              refreshData={GetStudyMaterial}
+              refreshData={fetchStudyMaterial}
             />
           ))}
         </div>

@@ -37,16 +37,23 @@ const Create = () => {
       const result = await axios.post("/api/generate-course-outline", {
         courseId: courseId,
         ...formData,
-        createdBy: user?.primaryEmailAddress?.emailAddress,
+        createdBy: user?.primaryEmailAddress?.emailAddress || "unknown@user.com",
       });
       console.log("AI Generated Course:", result.data.result.response);
       setLoading(false);
       router.replace("/dashboard");
       toast.success("Your course content is being generated. Please wait, and then click Refresh.");
     } catch (error) {
-      console.error("Error generating course outline:", error);
+      console.error("Error generating course outline:", {
+        message: error.message,
+        response: error.response?.data,
+      });
       setLoading(false);
-      toast.error("Failed to generate course outline. Please try again.");
+      if (error.response?.status === 503) {
+        toast.error("AI service is temporarily overloaded. Please try again in a moment.");
+      } else {
+        toast.error("Failed to generate course outline. Please try again.");
+      }
     }
   };
 
@@ -85,7 +92,9 @@ const Create = () => {
               <div />
             )}
             {step === 0 ? (
-              <Button onClick={() => setStep(step + 1)}>Next</Button>
+              <Button onClick={() => setStep(step + 1)} disabled={!formData.courseType}>
+                Next
+              </Button>
             ) : (
               <Button onClick={GenerateCourseOutline} disabled={loading}>
                 {loading ? <Loader className="animate-spin w-4 h-4" /> : "Generate"}
