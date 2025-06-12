@@ -4,7 +4,6 @@ import { useUser } from '@clerk/nextjs';
 import { db } from '@/configs/db';
 import { USER_TABLE } from '@/configs/schema';
 import { eq } from 'drizzle-orm';
-import axios from "axios";
 
 function Provider({ children }) {
     const { user } = useUser();

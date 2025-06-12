@@ -18,12 +18,12 @@ const SideBar = () => {
     { name: "Profile", icon: UserCircle, path: "/dashboard/profile" },
   ];
 
-  const toggleDashboardMenu = () => setDashboardOpen(!isDashboardOpen);
+  // const toggleDashboardMenu = () => setDashboardOpen(!isDashboardOpen);
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    // You can add logic here to apply theme change globally
-  };
+  // const toggleTheme = () => {
+  //   setIsDarkMode(!isDarkMode);
+  //   // You can add logic here to apply theme change globally
+  // };
 
   return (
     <aside className="h-screen w-64 bg-[#1f2937] text-white p-6 flex flex-col border-r border-gray-700">
@@ -43,13 +43,13 @@ const SideBar = () => {
       </div> */}
 
       {/* Search Bar */}
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <input
           type="text"
           placeholder="Search..."
           className="w-full p-2 rounded-md text-sm bg-gray-700 text-white placeholder-gray-400 focus:outline-none"
         />
-      </div>
+      </div> */}
 
       {/* Menu */}
       <nav className="flex flex-col gap-2">
@@ -105,23 +105,23 @@ const SideBar = () => {
       </div>
 
       {/* Theme Toggle */}
-      <div onClick={toggleTheme} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-700 cursor-pointer">
+      {/* <div onClick={toggleTheme} className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-700 cursor-pointer">
         <Sun className="w-5 h-5" />
         <span className="text-sm font-medium">{isDarkMode ? "Light Mode" : "Dark Mode"}</span>
-      </div>
+      </div> */}
 
       {/* Settings Link */}
-      <Link href="/dashboard/settings">
+      {/* <Link href="/dashboard/settings">
         <div className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-gray-700">
           <Settings className="w-5 h-5" />
           <span className="text-sm font-medium">Settings</span>
         </div>
-      </Link>
+      </Link> */}
 
       {/* Logout Button */}
-      <Button className="mt-4 w-full bg-red-800 hover:bg-red-600 text-white">
+      {/* <Button className="mt-4 w-full bg-red-800 hover:bg-red-600 text-white">
         Logout
-      </Button>
+      </Button> */}
     </aside>
   );
 };
