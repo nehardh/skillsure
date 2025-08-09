@@ -6,21 +6,30 @@ import Link from "next/link";
 
 const DashboardHeader = () => {
   return (
-    <header className="px-6 py-4 bg-white border-b border-gray-200 shadow-sm flex items-center justify-between">
+    <header className="px-8 py-4 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center justify-between sticky top-0 z-50">
       {/* Logo */}
-      <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-90 transition">
+      <Link
+        href="/dashboard"
+        className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+      >
         <Image
           src="/logo.svg"
           alt="SkillSure Logo"
-          width={28}
-          height={28}
+          width={32}
+          height={32}
           priority
         />
-        <span className="text-xl font-semibold text-gray-800">SkillSure</span>
+        <span className="text-xl font-bold tracking-tight text-gray-900">
+          SkillSure
+        </span>
       </Link>
 
       {/* User Avatar */}
-      <UserButton afterSignOutUrl="/" />
+      <UserButton afterSignOutUrl="/" appearance={{
+        elements: {
+          avatarBox: "w-10 h-10",
+        }
+      }} />
     </header>
   );
 };

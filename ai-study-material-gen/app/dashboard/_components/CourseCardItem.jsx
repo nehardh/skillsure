@@ -1,26 +1,26 @@
-import React from 'react';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { RefreshCcw, Trash2 } from 'lucide-react';
-import Link from 'next/link';
-import { toast } from 'sonner';
+import React from "react";
+import Image from "next/image";
+import { RefreshCcw } from "lucide-react";
+import Link from "next/link";
+import { toast } from "sonner";
 
 const CourseCardItem = ({ course, onDelete }) => {
   const creationDate = course?.createdAt
     ? new Date(course.createdAt).toLocaleDateString("en-GB", {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
       })
     : "27-Mar-25";
 
-  const handleDelete = async () => {
-    const confirmed = window.confirm("Are you sure you want to delete this course?");
+  const handleDelete = async (e) => {
+    e.preventDefault(); // Prevent link navigation
+    const confirmed = window.confirm("Delete this course?");
     if (confirmed) {
       try {
         await onDelete(course.courseId);
         toast.success("Course deleted successfully");
-      } catch (err) {
+      } catch {
         toast.error("Failed to delete course");
       }
     }
@@ -28,42 +28,44 @@ const CourseCardItem = ({ course, onDelete }) => {
 
   return (
     <Link href={`/course/${course?.courseId}`} passHref>
-      <div className="border rounded-xl shadow-sm p-5 flex flex-col h-full bg-gradient-to-br from-blue-50 to-gray-50 hover:shadow-lg transition-shadow cursor-pointer">
+      <div className="border border-gray-200 rounded-xl p-5 flex flex-col h-full bg-white hover:shadow-md transition-all duration-200 cursor-pointer group">
         {/* Header */}
         <div className="flex justify-between items-start mb-4">
-          <Image src="/knowledge.png" alt="icon" width={48} height={48} />
-          <div className="flex gap-2">
-            {course?.status === 'Generating' ? (
-              <span className="text-xs px-2 py-1 rounded-full bg-gray-600 text-white flex items-center gap-1">
-                <RefreshCcw className="h-4 w-4 animate-spin" />
-                Generating...
-              </span>
-            ) : null}
-            {/* Delete Button */}
-            {/* <Button
-              className="bg-black hover:bg-red-600 text-white"
-              size="sm"
-              variant="destructive"
-              onClick={(e) => {
-                e.preventDefault(); // Prevent the Link from navigating when deleting
-                handleDelete();
-              }}
-            >
-              Delete
-            </Button> */}
-          </div>
+          <Image
+            src="/knowledge.png"
+            alt="Course Icon"
+            width={40}
+            height={40}
+            className="rounded"
+          />
+          {course?.status === "Generating" && (
+            <span className="text-xs px-2 py-1 rounded-full bg-gray-800 text-white flex items-center gap-1">
+              <RefreshCcw className="h-3 w-3 animate-spin" />
+              Generating
+            </span>
+          )}
         </div>
 
-        {/* Title & Summary */}
-        <h2 className="font-semibold text-lg text-gray-800">
+        {/* Title */}
+        <h2 className="font-semibold text-lg text-gray-900 group-hover:text-black line-clamp-1">
           {course?.courseLayout?.course_title || "Untitled"}
         </h2>
-        <p className="text-sm text-gray-600 mt-1 line-clamp-3">
+
+        {/* Summary */}
+        <p className="text-sm text-gray-600 mt-2 line-clamp-3">
           {course?.courseLayout?.course_summary || "No summary provided."}
         </p>
 
-        {/* Creation Date */}
-        {/* <p className="text-xs text-gray-400 mt-4">Created on: {creationDate}</p> */}
+        {/* Footer */}
+        <div className="mt-auto pt-4 flex justify-between items-center text-xs text-gray-400">
+          <span>Created {creationDate}</span>
+          <button
+            onClick={handleDelete}
+            className="text-red-500 hover:text-red-700"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </Link>
   );

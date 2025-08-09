@@ -13,7 +13,7 @@ function Course() {
 
   useEffect(() => {
     if (courseId) GetCourse();
-  }, [courseId]); // ✅ Now runs only when `courseId` changes.
+  }, [courseId]);
 
   const GetCourse = async () => {
     try {
@@ -27,19 +27,25 @@ function Course() {
   };
 
   return (
-    <div className="mx-10 md:mx-36 lg:px-60 mt-10 mb-5">
+    <div className="px-4 md:px-10 lg:px-28 xl:px-48 mt-10 mb-16 space-y-12">
       {loading ? (
         <p className="text-center text-gray-500">Loading course details...</p>
       ) : (
         <>
           {/* Course Introduction */}
-          <CourseIntroCard course={course} />
+          <section>
+            <CourseIntroCard course={course} />
+          </section>
 
           {/* Study Material Options */}
-          <StudyMaterialSection courseId={courseId} course={course} />
+          <section>
+            <StudyMaterialSection courseId={courseId} course={course} />
+          </section>
 
           {/* Chapter List */}
-          <ChapterList course={course} />
+          <section>
+            <ChapterList course={course} />
+          </section>
         </>
       )}
     </div>

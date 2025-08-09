@@ -1,59 +1,89 @@
-import React, { useState } from 'react'
-import Image from 'next/image'
+import React, { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import axios from 'axios';
-import { RefreshCcw } from 'lucide-react';
-import { toast } from 'sonner';
-import Link from 'next/link';
+import axios from "axios";
+import { RefreshCcw } from "lucide-react";
+import { toast } from "sonner";
+import Link from "next/link";
 
 const MaterialCardItem = ({ item, studyTypeContent, course, refreshData }) => {
-
   const [loading, setLoading] = useState(false);
+  const hasContent = Array.isArray(studyTypeContent?.[item.type]) && studyTypeContent[item.type].length > 0;
 
   const GenerateContent = async () => {
-    toast("Content is being generated, please wait!")
     setLoading(true);
-    let chapters = '';
-    course?.courseLayout?.chapters.forEach((chapter) => {
-      chapters = (chapter.chapter_title) + ", " + chapters;
-    });
-     
-    const result = await axios.post('/api/study-type-content', {
-      courseId: course?.courseId,
-      type: item.name,
-      chapters: chapters
-    });
-    console.log(result);  
-    setLoading(false);
-    refreshData(true);
-    toast("Your content is generated!");
-  }
+    toast("Generating content, please wait...");
+
+    try {
+      const chapters = course?.courseLayout?.chapters
+        ?.map((chapter) => chapter.chapter_title)
+        .join(", ");
+
+      await axios.post("/api/study-type-content", {
+        courseId: course?.courseId,
+        type: item.name,
+        chapters,
+      });
+
+      await refreshData(true);
+      toast.success("Your content is ready!");
+    } catch (error) {
+      toast.error("Failed to generate content. Please try again.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-
-      <div className={`border shadow-md rounded-lg p-5 flex flex-col items-center ${studyTypeContent?.[item.type]?.length==null && 'grayscale'}`}>
-          {studyTypeContent?.[item.type]?.length==null 
-            ? <h2 className="p-1 px-2 bg-gray-500 text-white rounded-full text-[10px] mb-2">
-              {loading && <RefreshCcw className="animate-spin sm"/>} Generate</h2> 
-            : <h2 className="p-1 px-2 bg-green-500 text-white rounded-full text-[10px] mb-2">View</h2>
-          }
-          <Image 
-              src={item.icon}
-              alt={item.name}
-              width={50}
-              height={50}
-          />
-          <h2 className="font-medium mt-3">{item.name}</h2>
-          <p className="text-gray-500 text-sm text-center">{item.desc}</p>
-          <Link href={'/course/'+course?.courseId+item.path}>
-          {studyTypeContent?.[item.type]?.length==null 
-            ? <Button className="mt-3 w-full" variant="outline" onClick={()=> GenerateContent()} >Generate</Button> 
-            : <Button className="mt-3 w-full" variant="outline">View</Button>
-          }
-          </Link>
+    <div
+      className={`border border-gray-200 shadow-sm rounded-xl p-5 flex flex-col items-center text-center transition-all duration-300 hover:shadow-md hover:scale-[1.02] ${
+        !hasContent && "opacity-80"
+      }`}
+    >
+      {/* Status Badge */}
+      <div
+        className={`px-3 py-1 text-[10px] rounded-full font-medium mb-3 ${
+          hasContent ? "bg-green-500 text-white" : "bg-gray-400 text-white"
+        }`}
+      >
+        {loading ? (
+          <RefreshCcw className="animate-spin w-3 h-3 inline-block mr-1" />
+        ) : hasContent ? (
+          "Ready"
+        ) : (
+          "Not Generated"
+        )}
       </div>
 
-  )
-}
+      {/* Icon */}
+      <div className="w-14 h-14 relative">
+        <Image src={item.icon} alt={item.name} fill className="object-contain" />
+      </div>
 
-export default MaterialCardItem
+      {/* Title */}
+      <h2 className="font-semibold mt-4 text-sm md:text-base">{item.name}</h2>
+      <p className="text-gray-500 text-xs md:text-sm mt-1">{item.desc}</p>
+
+      {/* Action Button */}
+      {hasContent ? (
+        <Link href={`/course/${course?.courseId}${item.path}`} className="w-full mt-4">
+          <Button className="w-full" variant="outline">
+            View
+          </Button>
+        </Link>
+      ) : (
+        <Button
+          className="w-full mt-4"
+          variant="outline"
+          disabled={loading}
+          onClick={GenerateContent}
+        >
+          {loading ? <RefreshCcw className="animate-spin w-4 h-4" /> : "Generate"}
+        </Button>
+      )}
+    </div>
+  );
+};
+
+export default MaterialCardItem;
